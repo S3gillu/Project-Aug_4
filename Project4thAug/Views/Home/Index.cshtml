@@ -1,0 +1,93 @@
+﻿@model Project4thAug.Models.Information
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Add Employee", "Add")
+
+
+    <h2>Index</h2>
+    <!--Add Jquery Datatable reference files-->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" />
+    <div style="width:90%;">
+        <table id="Jdatatable" class="table table-responsive table-bordered">
+            <thead>
+                <tr>
+                    <th> Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Marital Status</th>
+                    <th>Action</th>
+                   
+
+                </tr>
+            </thead>
+        </table>
+        <div id="suraj">
+ 
+        </div>
+    </div>
+    @section scripts{
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $("#Jdatatable").DataTable({
+            "ajax": {
+                "url": "/Home/GetData",
+                "type": "GET",
+                "datatype":"json"
+            },
+            "columns": [
+                        { "data": "Name", "autoWidth": true },
+                        { "data": "Phone", "autoWidth": true },
+                        { "data": "Email", "autoWidth": true },
+                         {
+                             data:   "MariStatus",
+                             render: function ( data, type, row ) {
+                                 if ( type === 'display' ) {
+                                     return '<input type="checkbox" class="editor-active">';
+                                 }
+                                 return data;
+                             },
+                             className: "dt-body-center"
+                         },
+            {
+            data: null,
+        className: "center",
+        defaultContent: '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
+    }
+
+            ],
+            rowCallback: function (row, data) {
+                // Set the checked state of the checkbox in the table
+                $('input.editor-active', row).prop('checked', data.active == 1);
+            }
+
+        });
+    });
+    $('#example').on('click', 'a.editor_edit', function (e) {
+        e.preventDefault();
+
+        editor.edit($(this).closest('tr'), {
+            title: 'Edit record',
+            buttons: 'Update'
+        });
+    });
+
+    // Delete a record
+    $('#example').on('click', 'a.editor_remove', function (e) {
+        e.preventDefault();
+
+        editor.remove($(this).closest('tr'), {
+            title: 'Delete record',
+            message: 'Are you sure you wish to remove this record?',
+            buttons: 'Delete'
+        });
+    });
+        </script>
+    }
